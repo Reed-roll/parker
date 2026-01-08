@@ -5,7 +5,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=ext-intl
 
 FROM php:8.5-apache
-RUN apt-get update && apt-get install -y libsqlite3-dev zip unzip libicu-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libsqlite3-dev zip unzip libicu-dev --no-install-recommends && rm -rf /var/lib/apt/lists/* 
 RUN docker-php-ext-install pdo_sqlite intl
 RUN a2enmod rewrite
 

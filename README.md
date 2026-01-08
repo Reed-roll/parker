@@ -1,68 +1,96 @@
-# CodeIgniter 4 Application Starter
+# Parker - Parking Management Microservice
 
-## What is CodeIgniter?
+A RESTful microservice for managing parking operations, built with CodeIgniter 4.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+**Base URL:** `https://parker.queenifyofficial.site/`
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## Features
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- 🎫 Parking ticket management (start/end sessions)
+- 💳 Payment processing with webhook support
+- 🧾 Digital receipt generation
+- 👤 User authentication and management
+- 🅿️ Parking spot availability tracking
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+## API Documentation
 
-## Installation & updates
+All API endpoints are prefixed with `/api`
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+### Authentication
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+#### Register
+```http
+POST /api/auth/register
+```
 
-## Setup
+#### Login
+```http
+POST /api/auth/login
+```
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+#### Get Current User
+```http
+GET /api/auth/me
+```
 
-## Important Change with index.php
+### Parking Tickets
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+#### Start Parking Session
+```http
+POST /api/tickets/start
+```
+Creates a new parking ticket when a vehicle enters.
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+#### End Parking Session
+```http
+POST /api/tickets/{ticket_id}/end
+```
+Ends an active parking session and calculates charges.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+#### Get Ticket Details
+```http
+GET /api/tickets/{ticket_id}
+```
+Retrieves information about a specific parking ticket.
 
-## Repository Management
+### Payments
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+#### Pay for Ticket
+```http
+POST /api/tickets/{ticket_id}/pay
+```
+Processes payment for a parking ticket.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+#### Payment Webhook
+```http
+POST /api/payments/webhook
+```
+Webhook endpoint for payment gateway callbacks.
 
-## Server Requirements
+#### Get Receipt
+```http
+GET /api/payments/{payment_id}/receipt
+```
+Retrieves a payment receipt.
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+### Users
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+#### Get User Tickets
+```http
+GET /api/users/{user_id}/tickets
+```
+Retrieves all parking tickets for a specific user.
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+### Parking Spots
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+#### List Parking Spots
+```http
+GET /api/parking-spots
+```
+Returns available parking spots and their status.
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+#### Update Parking Spot
+```http
+PUT /api/parking-spots/{spot_id}
+```
+Updates parking spot information (availability, status, etc.).
