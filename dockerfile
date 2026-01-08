@@ -1,11 +1,12 @@
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Ignore intl platform requirement during composer install, it will be installed in the final image
+RUN composer install --no-dev --optimize-autoloader --no-interaction --ignore-platform-req=ext-intl
 
-FROM php:8.2-apache
-RUN apt-get update && apt-get install -y libsqlite3-dev zip unzip && rm -rf /var/lib/apt/lists/*
-RUN docker-php-ext-install pdo_sqlite
+FROM php:8.5-apache
+RUN apt-get update && apt-get install -y libsqlite3-dev zip unzip libicu-dev && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install pdo_sqlite intl
 RUN a2enmod rewrite
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
