@@ -7,6 +7,13 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 
+$routes->group('auth', ['namespace' => 'App\Controllers'], function ($routes) {
+	$routes->post('register', 'AuthController::register');
+	$routes->post('login', 'AuthController::login');
+	// $routes->get('logout', 'AuthController::logout');
+	$routes->get('me', 'AuthController::me');
+});
+
 $routes->group('api', ['namespace' => 'App\Controllers'], function ($routes) {
 	// Tickets
 	$routes->post('tickets/start', 'TicketController::start');

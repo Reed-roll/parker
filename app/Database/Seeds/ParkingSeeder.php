@@ -13,7 +13,7 @@ class ParkingSeeder extends Seeder
         // users
         $db->table('users')->insert([
             'email' => 'demo@park.example',
-            'password_hash' => null,
+            'password_hash' => password_hash('password', PASSWORD_DEFAULT),
             'full_name' => 'Demo User',
             'phone' => '555-0001',
             'created_at' => date('Y-m-d H:i:s'),
